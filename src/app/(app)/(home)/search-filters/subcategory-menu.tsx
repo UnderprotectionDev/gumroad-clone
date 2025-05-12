@@ -1,14 +1,12 @@
 import Link from "next/link";
 
 import { Category } from "@/payload-types";
+import { CustomCategory } from "../types";
 
 interface Props {
-  category: Category; //TODO: Change this
+  category: CustomCategory; // TODO: Change this
   isOpen: boolean;
-  position: {
-    top: number;
-    left: number;
-  };
+  position: { top: number; left: number };
 }
 
 export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
@@ -21,12 +19,13 @@ export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
   }
 
   const backgroundColor = category.color || "#F5F5F5";
+
   return (
     <div
-      className="absolute z-100"
+      className="fixed z-100"
       style={{
-        top: "100%",
-        left: 0,
+        top: position.top,
+        left: position.left,
       }}
     >
       {/* Invisible bridge to maintain hover */}

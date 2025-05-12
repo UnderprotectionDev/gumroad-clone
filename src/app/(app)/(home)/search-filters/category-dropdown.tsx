@@ -4,12 +4,14 @@ import { useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Category } from "@/payload-types";
-import { useDropdownPosition } from "./use-dropdown-position";
-import { SubcategoryMenu } from "./subcategory-menu";
 
-interface CategoryDropdownProps {
-  category: Category;
+import { SubcategoryMenu } from "./subcategory-menu";
+import { useDropdownPosition } from "./use-dropdown-position";
+import { CustomCategory } from "../types";
+import Link from "next/link";
+
+interface Props {
+  category: CustomCategory;
   isActive?: boolean;
   isNavigationHovered?: boolean;
 }
@@ -18,22 +20,28 @@ export const CategoryDropdown = ({
   category,
   isActive,
   isNavigationHovered,
-}: CategoryDropdownProps) => {
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { getDropdownPosition } = useDropdownPosition(dropdownRef);
 
   const onMouseEnter = () => {
     if (category.subcategories) {
+      console.log("hello");
       setIsOpen(true);
     }
   };
 
-  const onMouseLeave = () => {
-    setIsOpen(false);
-  };
+  const onMouseLeave = () => setIsOpen(false);
 
   const dropdownPosition = getDropdownPosition();
+
+  // TODO: Potentially improve mobile
+  // const toggleDropdown = () => {
+  //   if (category.subcategories?.docs?.length) {
+  //     setIsOpen(!isOpen);
+  //   }
+  // };
 
   return (
     <div
@@ -41,16 +49,21 @@ export const CategoryDropdown = ({
       ref={dropdownRef}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      // onClick={toggleDropdown}
     >
       <div className="relative">
         <Button
-          variant={"elevated"}
+          variant="elevated"
           className={cn(
             "h-11 px-4 bg-transparent border-transparent rounded-full hover:bg-white hover:border-primary text-black",
-            isActive && !isNavigationHovered && "bg-white border-primary"
+            isActive && !isNavigationHovered && "bg-white border-primary",
+            isOpen &&
+              "bg-white border-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-x-[4px] -translate-y-[4px]"
           )}
         >
-          {category.name}
+          <Link href={`/${category.slug === "all" ? "" : category.slug}`}>
+            {category.name}
+          </Link>
         </Button>
         {category.subcategories && category.subcategories.length > 0 && (
           <div
