@@ -1,15 +1,20 @@
 import Link from "next/link";
 
-import { Category } from "@/payload-types";
-import { CustomCategory } from "../types";
+import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
-interface Props {
-  category: CustomCategory; // TODO: Change this
+import { Category } from "@/payload-types";
+
+interface SubcategoryMenuProps {
+  category: CategoriesGetManyOutput[1];
   isOpen: boolean;
   position: { top: number; left: number };
 }
 
-export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
+export const SubcategoryMenu = ({
+  category,
+  isOpen,
+  position,
+}: SubcategoryMenuProps) => {
   if (
     !isOpen ||
     !category.subcategories ||
