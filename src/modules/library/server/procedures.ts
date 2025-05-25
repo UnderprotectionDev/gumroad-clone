@@ -1,9 +1,9 @@
 import z from "zod";
+import { TRPCError } from "@trpc/server";
 
 import { DEFAULT_LIMIT } from "@/constants";
 import { Media, Tenant } from "@/payload-types";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { TRPCError } from "@trpc/server";
 
 export const libraryRouter = createTRPCRouter({
   getOne: protectedProcedure
@@ -88,9 +88,35 @@ export const libraryRouter = createTRPCRouter({
         },
       });
 
+      const dataWithSummarizedReviews = await Promise.all(
+        productsData.docs.map(async (doc) => {
+          const reviewsData = await ctx.db.find({
+            collection: "reviews",
+            pagination: false,
+            where: {
+              product: {
+                equals: doc.id,
+              },
+            },
+          });
+
+          return {
+            ...doc,
+            reviewCount: reviewsData.totalDocs,
+            reviewRating:
+              reviewsData.docs.length === 0
+                ? 0
+                : reviewsData.docs.reduce(
+                    (acc, review) => acc + review.rating,
+                    0
+                  ) / reviewsData.totalDocs,
+          };
+        })
+      );
+
       return {
         ...productsData,
-        docs: productsData.docs.map((doc) => ({
+        docs: dataWithSummarizedReviews.map((doc) => ({
           ...doc,
           image: doc.image as Media | null,
           tenant: doc.tenant as Tenant & { image: Media | null },
