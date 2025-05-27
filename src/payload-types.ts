@@ -161,7 +161,7 @@ export interface User {
 export interface Tenant {
   id: string;
   /**
-   * This is the name of the store (e.g. Antonio's Store)
+   * This is the name of the store (e.g. Underprotection's Store)
    */
   name: string;
   /**
