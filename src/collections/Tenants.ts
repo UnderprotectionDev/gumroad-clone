@@ -24,7 +24,8 @@ export const Tenants: CollectionConfig = {
       type: "text",
       label: "Store Name",
       admin: {
-        description: "This is the name of the store (e.g. Antonio's Store)",
+        description:
+          "This is the name of the store (e.g. Underprotection's Store)",
       },
     },
     {
