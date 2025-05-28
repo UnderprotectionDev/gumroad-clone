@@ -14,6 +14,8 @@ interface LibraryProductPageProps {
   }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function LibraryProductPage({
   params,
 }: LibraryProductPageProps) {
